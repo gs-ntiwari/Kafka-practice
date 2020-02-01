@@ -99,6 +99,11 @@ public class TwitterProducer {
         properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
         properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
 
+        //high throughput settings at the expense of a bit of latency and cpu cycles
+        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
+        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024)); //32 Kb, by default its 16 Kb
+
         //create a producer
         KafkaProducer<String, String> producer= new KafkaProducer<String, String>(properties);
 
@@ -114,7 +119,7 @@ public class TwitterProducer {
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 // Optional: set up some followings and track terms
        // List<Long> followings = Lists.newArrayList(1234L, 566788L);
-        List<String> terms = Lists.newArrayList("bollywood");
+        List<String> terms = Lists.newArrayList("bollywood", "india", "politics", "usa");
        // hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
 
